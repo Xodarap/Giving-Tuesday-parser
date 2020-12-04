@@ -11,6 +11,7 @@ def parse_file(filename):
   donation_strings = [(header.text.split(' donated ')) for header in headers]
   for donation in donation_strings:
     printable = [v.encode("utf-8").decode('utf-8').replace(',','') for v in donation]
+    # todo: there's still some weird stuff with UTF encoding here
     print( printable_name.replace(',','') +',' + ','.join(printable).encode("utf-8").decode('utf-8')[0:-1])
 
 for path in Path('2020-12-03-20201204T021819Z-001/2020-12-03').rglob('*.html'):
