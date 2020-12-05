@@ -35,6 +35,8 @@ def get_date(donation):
     return 'D' + combined
   elif combined[0:2] == 'es':
     return 'Y' + combined
+  elif combined[0:2] == 'ov':
+    return 'N' + combined
   return combined
 
 for path in Path('new/2020-12-03').rglob('*.html'):
