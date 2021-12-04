@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import re
 from pathlib import Path
+from datetime import datetime
 
 output_file = open("output_dates.csv", "w", encoding='utf-8')
 
@@ -26,21 +27,30 @@ def handle_donation(donation):
   return single_line + ',' + get_date(donation)
 
 def get_date(donation):
-  date_elements = donation.select('span.l9j0dhe7 span.l9j0dhe7:not(.vw7X6QX):not(.idG4), span.l9j0dhe7 span.nc684nl6:not(.vw7X6QX):not(.idG4)')
-  if date_elements is None:
-    return ''
-  visible = list(filter(lambda v: not (v.has_attr('style')), date_elements))
-  combined = ''.join([d.text for d in visible])
-  if combined[0:2] == 'ec':
-    return 'D' + combined
-  elif combined[0:2] == 'es':
-    return 'Y' + combined
-  elif combined[0:2] == 'ov':
-    return 'N' + combined
-  return combined
+  def extract_date(donation):
+    date_elements = donation.select('span.l9j0dhe7 span.l9j0dhe7:not(.vw7X6QX):not(.idG4), span.l9j0dhe7 span.nc684nl6:not(.vw7X6QX):not(.idG4)')
+    if date_elements is None:
+      return ''
+    visible = list(filter(lambda v: not (v.has_attr('style')), date_elements))
+    combined = ''.join([d.text for d in visible])
+    if combined[0:2] == 'ec':
+      return 'D' + combined
+    elif combined[0:2] == 'es':
+      return 'Y' + combined
+    elif combined[0:2] == 'ov':
+      return 'N' + combined
+    return combined
+  extracted = extract_date(donation)
+  try:
+    return datetime.strptime(extracted, '%B %d at %I:%M %p').replace(year = 2021).__str__()
+  except ValueError:
+    # try:
+    return datetime.strptime(extracted, 'Yesterday at %I:%M %p').replace(year = 2021, month=12, day=1).__str__()
+    # except ValueError:
+      # return extracted
 
 for path in Path('data').rglob('*.html'):
-  parse_file('data/' + path.name)
   print( path.name )
+  parse_file('data/' + path.name)
 # parse_file('new/2020-12-03/Giving Tuesday 2020- Albert Schweitzer Foundation via ACE.html')
 output_file.close()
