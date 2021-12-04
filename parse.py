@@ -28,7 +28,7 @@ def handle_donation(donation):
 
 def get_date(donation):
   def extract_date(donation):
-    date_elements = donation.select('span.l9j0dhe7 span.l9j0dhe7:not(.vw7X6QX):not(.idG4), span.l9j0dhe7 span.nc684nl6:not(.vw7X6QX):not(.idG4)')
+    date_elements = donation.select('span.l9j0dhe7 span.l9j0dhe7:not(.vw7X6QX):not(.idG4):not(.hdG3):not(.ww7X6QY), span.l9j0dhe7 span.nc684nl6:not(.vw7X6QX):not(.idG4):not(.hdG3):not(.ww7X6QY)')
     if date_elements is None:
       return ''
     visible = list(filter(lambda v: not (v.has_attr('style')), date_elements))
