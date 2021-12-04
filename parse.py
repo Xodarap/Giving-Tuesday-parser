@@ -6,7 +6,7 @@ output_file = open("output_dates.csv", "w", encoding='utf-8')
 
 def parse_file(filename):
   f = open(filename, "r", encoding='utf-8')
-  printable_name = ('- '.join(filename.split('- ')[1:]))[0:-5]
+  printable_name = filename[5:-5]
   html_text = f.read()
   soup = BeautifulSoup(html_text, 'html.parser')
   donation_strings = [handle_donation(d) for d in soup.select('div.j83agx80.cbu4d94t.ew0dbk1b.irj2b8pg')]
@@ -26,7 +26,7 @@ def handle_donation(donation):
   return single_line + ',' + get_date(donation)
 
 def get_date(donation):
-  date_elements = donation.select('span.b6zbclly span.b6zbclly')
+  date_elements = donation.select('span.b6zbclly span.l9j0dhe7:not(.vw7X6QX):not(.idG4), span.b6zbclly span.nc684nl6:not(.vw7X6QX):not(.idG4)')
   if date_elements is None:
     return ''
   visible = list(filter(lambda v: not (v.has_attr('style')), date_elements))
@@ -39,8 +39,8 @@ def get_date(donation):
     return 'N' + combined
   return combined
 
-for path in Path('new/2020-12-03').rglob('*.html'):
-  parse_file('new/2020-12-03/' + path.name)
+for path in Path('data').rglob('*.html'):
+  parse_file('data/' + path.name)
   print( path.name )
 # parse_file('new/2020-12-03/Giving Tuesday 2020- Albert Schweitzer Foundation via ACE.html')
 output_file.close()
